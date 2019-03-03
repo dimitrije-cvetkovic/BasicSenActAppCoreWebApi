@@ -4,13 +4,38 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using dotnet_etcd;
 
 namespace BasicSenActAppCoreWebApi.Controllers
 {
-    [Route("api/ReadRGB")]
+    [Route("api/etcd")]
     public class ValuesController : Controller
     {
         string path = "./data/led.txt";
+        EtcdClient client = new EtcdClient("192.168.0.13", 2379);
+
+        [Route("putKey")]
+        [HttpPost]
+        public bool PutValue()
+        {
+            try
+            {
+                client.Put("foo/bar", "barfoo");
+            }
+            catch(Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        [Route("getKey")]
+        [HttpGet]
+        public string GetValue()
+        {
+            return client.GetVal("foo/bar");
+        }
+
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get()
