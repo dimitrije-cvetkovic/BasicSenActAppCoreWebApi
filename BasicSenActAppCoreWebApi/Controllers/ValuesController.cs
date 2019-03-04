@@ -12,21 +12,21 @@ namespace BasicSenActAppCoreWebApi.Controllers
     public class ValuesController : Controller
     {
         string path = "./data/led.txt";
-        EtcdClient client = new EtcdClient("192.168.0.13", 2379);
+        EtcdClient client = new EtcdClient("10.165.", 2379);
 
         [Route("putKey")]
         [HttpPost]
-        public bool PutValue()
+        public string PutValue()
         {
             try
             {
                 client.Put("foo/bar", "barfoo");
             }
-            catch(Exception)
+            catch(Exception e)
             {
-                return false;
+                return e.Message + ":\n:" + e.InnerException + ":\n:" + e.StackTrace;
             }
-            return true;
+            return "Uspesno postavljen foo/bar";
         }
 
         [Route("getKey")]
