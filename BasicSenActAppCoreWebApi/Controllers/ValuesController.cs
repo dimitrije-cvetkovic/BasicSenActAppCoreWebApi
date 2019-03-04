@@ -12,7 +12,7 @@ namespace BasicSenActAppCoreWebApi.Controllers
     public class ValuesController : Controller
     {
         string path = "./data/led.txt";
-        EtcdClient client = new EtcdClient("10.105.15.244", 4000);
+        EtcdClient client = new EtcdClient("10.108.237.143", 4000);
 
         [Route("putKey")]
         [HttpPost]
