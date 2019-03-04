@@ -12,7 +12,7 @@ namespace BasicSenActAppCoreWebApi.Controllers
     public class ValuesController : Controller
     {
         string path = "./data/led.txt";
-        EtcdClient client = new EtcdClient("10.165.", 2379);
+        EtcdClient client = new EtcdClient("10.105.15.244", 4000);
 
         [Route("putKey")]
         [HttpPost]
@@ -33,7 +33,16 @@ namespace BasicSenActAppCoreWebApi.Controllers
         [HttpGet]
         public string GetValue()
         {
-            return client.GetVal("foo/bar");
+            string s = "";
+            try
+            {
+                s = client.GetVal("foo/bar");
+            }
+            catch (Exception e)
+            {
+                return e.Message + ":\n:" + e.InnerException + ":\n:" + e.StackTrace;
+            }
+            return s;
         }
 
         // GET api/values
