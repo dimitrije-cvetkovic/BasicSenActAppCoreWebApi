@@ -11,8 +11,7 @@ namespace BasicSenActAppCoreWebApi.Controllers
     [Route("api/etcd")]
     public class ValuesController : Controller
     {
-        string path = "./data/led.txt";
-        EtcdClient client = new EtcdClient("10.108.237.143", 4000);
+        Algorithm dorado = new Algorithm(3);
 
         [Route("putKey")]
         [HttpPost]
@@ -20,13 +19,13 @@ namespace BasicSenActAppCoreWebApi.Controllers
         {
             try
             {
-                client.Put("foo/bar", "barfoo");
+                dorado.ExecuteRequest();
+                return dorado.GenerateResponse().ToString();
             }
             catch(Exception e)
             {
                 return e.Message + ":\n:" + e.InnerException + ":\n:" + e.StackTrace;
             }
-            return "Uspesno postavljen foo/bar";
         }
 
         [Route("getKey")]
@@ -36,7 +35,7 @@ namespace BasicSenActAppCoreWebApi.Controllers
             string s = "";
             try
             {
-                s = client.GetVal("foo/bar");
+                s = dorado.GetState().ToString();
             }
             catch (Exception e)
             {
@@ -45,36 +44,20 @@ namespace BasicSenActAppCoreWebApi.Controllers
             return s;
         }
 
-        // GET api/values
+        [Route("initialize")]
         [HttpGet]
-        public IEnumerable<string> Get()
+        public string WatchRequest()
         {
-            List<string> retList = new List<string>();
-            StreamReader f = null;
             try
             {
-                if (!System.IO.File.Exists(path))
-                {
-                    retList.Add("Actuator still has not created a file for reading.");
-                    return retList;
-                }
-                f = new StreamReader(new FileStream(path, FileMode.Open));
-                string R = f.ReadLine();
-                string G = f.ReadLine();
-                string B = f.ReadLine();
-                retList.Add(R);
-                retList.Add(G);
-                retList.Add(B);
-                return retList;
+                if (!dorado.ReqExists)
+                    dorado.CreateRequest();
+                dorado.WatchRequest();
+                return "True";
             }
-            catch(Exception)
+            catch (Exception e)
             {
-                return retList;
-            }
-            finally
-            {
-                if(f != null)
-                    f.Close();
+                return e.Message + ":\n:" + e.InnerException + ":\n:" + e.StackTrace;
             }
         }
     }

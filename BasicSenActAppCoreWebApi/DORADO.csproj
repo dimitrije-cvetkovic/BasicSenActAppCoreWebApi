@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="dotnet-etcd" Version="2.2.0" />
+    <PackageReference Include="KubeClient" Version="2.2.6" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
   </ItemGroup>
 
